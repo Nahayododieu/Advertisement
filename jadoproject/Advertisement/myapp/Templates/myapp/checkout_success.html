@@ -1,0 +1,165 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}Order Successful - Advertisement Platform{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="success-message">
+        <div class="success-icon">✓</div>
+        <h1>Order Placed Successfully!</h1>
+        <p>Thank you for your purchase. Your order has been processed successfully.</p>
+
+        <div class="order-details">
+            <h3>Order Summary</h3>
+            {% for order in orders %}
+            <div class="order-item">
+                <div class="item-info">
+                    <h4>{{ order.advertisement.title }}</h4>
+                    <p>Quantity: {{ order.quantity }}</p>
+                    <p>Order ID: #{{ order.id }}</p>
+                    <p>Status: {{ order.get_status_display }}</p>
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="order-total">
+                <p><strong>Total Items Purchased:</strong> {{ cart.get_total_items }}</p>
+                <p><strong>Total Amount:</strong> ${{ cart.get_total_price }}</p>
+            </div>
+        </div>
+
+        <div class="success-actions">
+            <a href="{% url 'advertisement-list' %}" class="btn btn-primary">Continue Shopping</a>
+            <a href="{% url 'user-dashboard' %}" class="btn btn-secondary">View Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .success-message {
+        text-align: center;
+        background: white;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .success-icon {
+        font-size: 4rem;
+        color: #27ae60;
+        margin-bottom: 20px;
+    }
+
+    .success-message h1 {
+        color: #27ae60;
+        margin-bottom: 15px;
+        font-size: 2rem;
+    }
+
+    .success-message > p {
+        color: #6c757d;
+        margin-bottom: 30px;
+        font-size: 1.1rem;
+    }
+
+    .order-details {
+        text-align: left;
+        margin: 30px 0;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .order-details h3 {
+        margin-bottom: 20px;
+        color: #2c3e50;
+        text-align: center;
+    }
+
+    .order-item {
+        padding: 15px 0;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .order-item:last-child {
+        border-bottom: none;
+    }
+
+    .item-info h4 {
+        margin: 0 0 5px 0;
+        color: #2c3e50;
+    }
+
+    .item-info p {
+        margin: 2px 0;
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    .order-total {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 2px solid #dee2e6;
+        text-align: center;
+    }
+
+    .order-total p {
+        margin: 5px 0;
+        font-size: 1rem;
+    }
+
+    .success-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 30px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-primary {
+        background: #3498db;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #2980b9;
+    }
+
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background: #5a6268;
+    }
+
+    @media (max-width: 768px) {
+        .success-actions {
+            flex-direction: column;
+        }
+
+        .success-message {
+            padding: 20px;
+        }
+    }
+</style>
+{% endblock %}

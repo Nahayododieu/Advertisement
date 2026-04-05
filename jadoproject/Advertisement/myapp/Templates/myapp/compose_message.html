@@ -1,0 +1,15 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}Compose Message{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Compose New Message</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Send Message</button>
+    </form>
+    <a href="{% url 'inbox' %}" class="btn btn-secondary">Back to Inbox</a>
+</div>
+{% endblock %}

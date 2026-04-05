@@ -1,0 +1,33 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}{% if action == 'buy' %}Buy Now{% else %}Place Order{% endif %}{% endblock %}
+
+{% block content %}
+<div style="max-width: 680px; margin: 4rem auto; padding: 2.5rem; background: white; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.1);">
+    <h2 style="margin-bottom: 1rem; color: #2c3e50;">{% if action == 'buy' %}Buy Now{% else %}Order Product{% endif %}</h2>
+    <p style="margin-bottom: 1.5rem; color: #4a4a4a;">Complete the form below to {{ action }} <strong>{{ advertisement.title }}</strong>.</p>
+
+    <div style="background: #f8f9fa; padding: 18px; border-radius: 10px; margin-bottom: 1.5rem;">
+        <h3 style="margin-top: 0;">Product</h3>
+        <p><strong>{{ advertisement.title }}</strong></p>
+        <p><strong>Price:</strong> ${{ advertisement.price|floatformat:2 }}</p>
+    </div>
+
+    <form method="post" style="display: grid; gap: 1rem;">
+        {% csrf_token %}
+        {% for field in form %}
+            <div>
+                <label style="display:block; font-weight:600; margin-bottom: 0.35rem;">{{ field.label }}{% if field.field.required %}*{% endif %}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <div style="color: #c0392b; font-size: 0.9rem; margin-top: 0.2rem;">{{ field.errors|join:", " }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn" style="background: #27ae60; color: white; padding: 12px; border-radius: 8px;">{% if action == 'buy' %}Pay Now{% else %}Place Order{% endif %}</button>
+    </form>
+
+    <p style="margin-top: 1.5rem; color: #7f8c8d;">You will be redirected to a confirmation page after completing your {{ action }}.</p>
+</div>
+{% endblock %}

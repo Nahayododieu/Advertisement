@@ -1,0 +1,144 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}Login - Advertisement Platform{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: #f6efe8;
+    }
+
+    .login-container {
+        max-width: 420px;
+        margin: 50px auto;
+        background: #fff;
+        padding: 36px;
+        border-radius: 24px;
+        box-shadow: 0 24px 34px rgba(93, 70, 84, 0.16);
+        border: 1px solid #f5d7d3;
+    }
+
+    .login-container h2 {
+        text-align: center;
+        color: #332f31;
+        margin-bottom: 16px;
+        font-size: 2rem;
+    }
+
+    .login-container p {
+        text-align: center;
+        color: #7a6467;
+        margin-bottom: 20px;
+        font-weight: 500;
+    }
+
+    .form-group label {
+        color: #5f4f54;
+        font-weight: 700;
+        margin-bottom: 6px;
+        display: block;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #e5d4d0;
+        border-radius: 12px;
+        font-size: 15px;
+        transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        background: #fff;
+    }
+
+    .form-group input:focus {
+        border-color: #e38f6f;
+        box-shadow: 0 0 0 4px rgba(227, 143, 111, 0.15);
+        outline: none;
+    }
+
+    .login-btn {
+        width: 100%;
+        padding: 13px;
+        background: linear-gradient(138deg, #ea9f8a 0%, #f5c2b5 100%);
+        color: #3c2b2d;
+        border: none;
+        border-radius: 999px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .login-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(171, 96, 90, 0.25);
+    }
+
+    .error-message {
+        background: #fde8e8;
+        color: #b84b4b;
+        border-left: 4px solid #ee7070;
+        border-radius: 8px;
+        padding: 10px 12px;
+        margin-bottom: 16px;
+    }
+
+    .signup-link {
+        text-align: center;
+        margin-top: 18px;
+        color: #7a6467;
+
+    }
+
+    .signup-link a {
+        color: #cb6f7a;
+        font-weight: 700;
+    }
+
+    .signup-link a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <h2>🔐 Login</h2>
+    <p>Please sign in to your account</p>
+
+    {% if form.non_field_errors %}
+        <div class="error-message">
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}">Username</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="error-message">{{ form.username.errors.0 }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.password.id_for_label }}">Password</label>
+            {{ form.password }}
+            {% if form.password.errors %}
+                <div class="error-message">{{ form.password.errors.0 }}</div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="login-btn">Login to Your Account</button>
+    </form>
+
+    {% if request and "admin-portal" not in request.path %}
+    <div class="signup-link">
+        Don't have an account? <a href="{% url 'signup' %}">Sign up here</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

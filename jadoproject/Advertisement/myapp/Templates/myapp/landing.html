@@ -1,0 +1,415 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}Welcome to Our Advertisement Platform{% endblock %}
+
+{% block content %}
+<div class="signup-banner">
+    <div class="signup-banner-content">
+        <h2>🚀 Ready to explore amazing products?</h2>
+        <p>Create your free account now and start browsing advertisements!</p>
+        <a href="{% url 'signup' %}" class="btn btn-primary btn-xl">Create Account - It's Free!</a>
+    </div>
+</div>
+
+<div class="landing-container">
+    <div class="hero-section">
+        <h1>Welcome to Our Advertisement Platform</h1>
+        <p class="hero-subtitle">Discover amazing products and connect with sellers in our community</p>
+        
+        <div class="hero-features">
+            <div class="feature">
+                <div class="feature-icon">🛍️</div>
+                <h3>Browse Products</h3>
+                <p>Explore a wide variety of advertisements from trusted sellers</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">👥</div>
+                <h3>Connect & Share</h3>
+                <p>Like, comment, and share your favorite products</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📢</div>
+                <h3>Post Ads</h3>
+                <p>Create and manage your own advertisements</p>
+            </div>
+        </div>
+        
+        <div class="cta-section">
+            <h2>Join Our Community Today</h2>
+            <p>Create your free account to start browsing and posting advertisements</p>
+
+            <div class="cta-buttons">
+    {% if user.is_authenticated %}
+        {% if user.is_staff %}
+        <a href="{% url 'advertisement-create' %}" 
+           class="btn btn-primary btn-large btn-glow" 
+           style="background-color: green; border-color: green;">
+           Post an Ad
+        </a>
+        {% endif %}
+
+        <a href="{% url 'user-dashboard' %}" 
+           class="btn btn-secondary btn-large" 
+           style="background-color: green; border-color: green;">
+            My Dashboard
+        </a>
+    {% else %}
+        <a href="{% url 'login' %}" 
+           class="btn btn-primary btn-large btn-glow" 
+           style="background-color: green; border-color: green;">
+            Sign In
+        </a>
+
+        <a href="{% url 'signup' %}" 
+           class="btn btn-secondary btn-large" 
+           style="background-color: green; border-color: green;">
+           Create Account
+        </a>
+    {% endif %}
+</div>
+
+            {% if not user.is_authenticated %}
+                <div class="signup-notice">
+                    <p> <strong>Not registered yet?</strong> Click "Sign In" to log in, or "Create Account" to register.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: #f6efe8;
+    }
+
+    .signup-banner {
+        background: linear-gradient(135deg, #d36d88 0%, #f9d9d6 100%);
+        color: #ffffff;
+        padding: 24px 0;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(57, 68, 102, 0.15);
+        border-radius: 24px;
+        margin: 0 16px 24px;
+    }
+
+    .signup-banner-content h2 {
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+    
+    .signup-banner-content p {
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+        opacity: 0.9;
+    }
+    
+    .btn-xl {
+        padding: 15px 30px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        border-radius: 50px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+            transform: translateY(0);
+        }
+        40% {
+            transform: translateY(-10px);
+        }
+        60% {
+            transform: translateY(-5px);
+        }
+    }
+    .landing-container {
+        min-height: calc(100vh - 100px);
+        background: linear-gradient(135deg, #fdf5eb 0%, #f8e9e1 100%);
+        color: #3e3a3a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        position: relative;
+    }
+
+    .hero-section {
+        text-align: center;
+        max-width: 900px;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 24px;
+        box-shadow: 0 18px 35px rgba(21, 41, 61, 0.12);
+        padding: 2.5rem;
+        border: 1px solid #efdfd9;
+    }
+
+    .hero-section h1 {
+        color: #3d2b2b;
+    }
+
+    .hero-subtitle {
+        color: #5f4f4f;
+    }
+    
+    .hero-section h1 {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        font-weight: 700;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .hero-subtitle {
+        font-size: 1.3rem;
+        margin-bottom: 50px;
+        opacity: 0.9;
+        line-height: 1.6;
+    }
+    
+    .hero-features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin-bottom: 60px;
+    }
+    
+    .feature {
+        background: rgba(255,255,255,0.1);
+        padding: 30px 20px;
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .feature-icon {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+    }
+    
+    .feature h3 {
+        font-size: 1.4rem;
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+    
+    .feature p {
+        opacity: 0.9;
+        line-height: 1.5;
+    }
+    
+    .cta-section {
+        background: rgba(255,255,255,0.1);
+        padding: 40px;
+        border-radius: 16px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .cta-section h2 {
+        font-size: 2rem;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+    
+    .cta-section p {
+        font-size: 1.1rem;
+        margin-bottom: 30px;
+        opacity: 0.9;
+    }
+    
+    .cta-buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .btn-large {
+        padding: 15px 30px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 25px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+    
+    .btn-primary {
+        background: rgba(255,255,255,0.2);
+        border: 2px solid rgba(255,255,255,0.3);
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background: rgba(255,255,255,0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+    
+    .btn-secondary {
+        background: transparent;
+        border: 2px solid rgba(255,255,255,0.5);
+        color: white;
+    }
+    
+    .btn-secondary:hover {
+        background: rgba(255,255,255,0.1);
+        transform: translateY(-2px);
+    }
+    
+    .btn-glow {
+        animation: glow 2s ease-in-out infinite alternate;
+        box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    @keyframes glow {
+        from {
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+        }
+        to {
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.8);
+        }
+    }
+    
+    .signup-notice {
+        margin-top: 20px;
+        padding: 15px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.2);
+        text-align: center;
+    }
+    
+    .signup-notice p {
+        font-size: 1.1rem;
+        margin: 0;
+        opacity: 0.9;
+    }
+
+    /* Landing content sections */
+    .landing-content {
+        padding: 4rem 0;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .landing-section {
+        margin-bottom: 4rem;
+        color: #fff;
+        text-align: center;
+    }
+
+    .landing-section h2 {
+        font-size: 2.2rem;
+        margin-bottom: 0.5rem;
+        letter-spacing: 0.5px;
+    }
+
+    .landing-section p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+    }
+
+    .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+    }
+
+    .category-card {
+        display: block;
+        padding: 20px;
+        border-radius: 16px;
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        text-decoration: none;
+        color: white;
+        transition: transform 0.3s ease, background 0.3s ease;
+        min-height: 140px;
+    }
+
+    .category-card:hover {
+        transform: translateY(-5px);
+        background: rgba(255,255,255,0.15);
+    }
+
+    .category-name {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .category-desc {
+        font-size: 0.95rem;
+        opacity: 0.85;
+        line-height: 1.4;
+    }
+
+    .ad-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+    }
+
+    .ad-card {
+        display: flex;
+        flex-direction: column;
+        border-radius: 18px;
+        overflow: hidden;
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        text-decoration: none;
+        color: white;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        min-height: 360px;
+    }
+
+    .ad-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    }
+
+    .ad-image {
+        width: 100%;
+        height: 180px;
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+
+    .ad-body {
+        padding: 18px 18px 22px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .ad-body h3 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+
+    .ad-meta {
+        font-size: 0.9rem;
+        opacity: 0.75;
+        margin-bottom: 10px;
+    }
+
+    .ad-price {
+        font-size: 1.1rem;
+        font-weight: 700;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: rgba(0,0,0,0.25);
+        display: inline-block;
+        align-self: flex-start;
+    }
+</style>
+{% endblock %}

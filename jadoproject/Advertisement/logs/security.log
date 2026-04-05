@@ -1,0 +1,121 @@
+Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "C:\Users\user\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\user\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\utils\deprecation.py", line 119, in __call__
+    response = self.process_request(request)
+  File "C:\Users\user\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\middleware\common.py", line 48, in process_request
+    host = request.get_host()
+  File "C:\Users\user\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\http\request.py", line 202, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+New regular user account created: testuser123 from IP: 127.0.0.1
+Logged out other session for user testuser123
+Logged out other session for user dodieu
+Logged out other session for user dodieu
+New regular user account created: NkundimanaEric12@ from IP: 127.0.0.1
+Successful login for user: NkundimanaEric12@ from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+New regular user account created: MukunziJeanmalie@123 from IP: 127.0.0.1
+Failed login attempt for username: MukunziJeanmalie@123 from IP: 127.0.0.1
+Successful login for user: NkundimanaEric12@ from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+New regular user account created: DusengeJean@12 from IP: 127.0.0.1
+Successful login for user: DusengeJean@12 from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: DusengeJean@12 from IP: 127.0.0.1
+Successful login for user: DusengeJean@12 from IP: 127.0.0.1
+Successful login for user: DusengeJean@12 from IP: 127.0.0.1
+Logged out other session for user DusengeJean@12
+Successful login for user: DusengeJean@12 from IP: 127.0.0.1
+Logged out other session for user DusengeJean@12
+Successful login for user: DusengeJean@12 from IP: 127.0.0.1
+Successful login for user: DusengeJean@12 from IP: 127.0.0.1
+Logged out other session for user DusengeJean@12
+Successful login for user: DusengeJean@12 from IP: 127.0.0.1
+Logged out other session for user DusengeJean@12
+Successful login for user: dodieu from IP: 127.0.0.1
+Logged out other session for user dodieu
+Successful login for user: dodieu from IP: 127.0.0.1
+Logged out other session for user dodieu
+Successful login for user: dodieu from IP: 127.0.0.1
+Logged out other session for user dodieu
+Successful login for user: dodieu from IP: 127.0.0.1
+Logged out other session for user dodieu
+Successful login for user: dodieu from IP: 127.0.0.1
+Logged out other session for user dodieu
+Successful login for user: dodieu from IP: 127.0.0.1
+Logged out other session for user dodieu
+New regular user account created: Mukundwa234@ from IP: 127.0.0.1
+Successful login for user: Mukundwa234@ from IP: 127.0.0.1
+New regular user account created: EricF123@ from IP: 127.0.0.1
+Successful login for user: EricF123@ from IP: 127.0.0.1
+New regular user account created: MukunziEric123@ from IP: 127.0.0.1
+Successful login for user: MukunziEric123@ from IP: 127.0.0.1
+New regular user account created: DamasceneTT123@ from IP: 127.0.0.1
+Successful login for user: DamasceneTT123@ from IP: 127.0.0.1
+Successful login for user: DamasceneTT123@ from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Logged out other session for user admin
+Logged out other session for user admin
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+New regular user account created: Corner12@ from IP: 127.0.0.1
+Successful login for user: Corner12@ from IP: 127.0.0.1
+Successful login for user: DamasceneTT123@ from IP: 127.0.0.1
+Successful login for user: DamasceneTT123@ from IP: 127.0.0.1
+Successful login for user: DamasceneTT123@ from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: Corner12@ from IP: 127.0.0.1
+Successful login for user: Corner12@ from IP: 127.0.0.1
+Successful login for user: Corner12@ from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: DamasceneTT123@ from IP: 127.0.0.1
+Successful login for user: DamasceneTT123@ from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+New regular user account created: cornel from IP: 127.0.0.1
+Successful login for user: cornel from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: DamasceneTT123@ from IP: 127.0.0.1
+Successful login for user: DamasceneTT123@ from IP: 127.0.0.1
+Successful login for user: DamasceneTT123@ from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Blocked login attempt from IP 127.0.0.1 - too many attempts
+Blocked login attempt from IP 127.0.0.1 - too many attempts
+Blocked login attempt from IP 127.0.0.1 - too many attempts
+Blocked login attempt from IP 127.0.0.1 - too many attempts
+Blocked login attempt from IP 127.0.0.1 - too many attempts
+Successful login for user: dodieu from IP: 127.0.0.1
+New regular user account created: Damascene@123 from IP: 127.0.0.1
+Successful login for user: Damascene@123 from IP: 127.0.0.1
+Successful login for user: Damascene@123 from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: Corner12@ from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: Damascene@123 from IP: 127.0.0.1
+Successful login for user: Damascene@123 from IP: 127.0.0.1
+Successful login for user: Damascene@123 from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: Damascene@123 from IP: 127.0.0.1
+Successful login for user: Corner12@ from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: DamasceneTT123@ from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1
+Successful login for user: DamasceneTT123@ from IP: 127.0.0.1
+Successful login for user: DamasceneTT123@ from IP: 127.0.0.1
+Successful login for user: dodieu from IP: 127.0.0.1

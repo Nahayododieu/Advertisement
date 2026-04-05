@@ -1,0 +1,20 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}Message{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>{{ message.subject }}</h2>
+    <p><strong>From:</strong> {{ message.sender.username }}</p>
+    <p><strong>To:</strong> {{ message.receiver.username }}</p>
+    {% if message.ad %}
+        <p><strong>Regarding:</strong> <a href="{% url 'advertisement-detail' message.ad.slug %}">{{ message.ad.title }}</a></p>
+    {% endif %}
+    <p><strong>Sent:</strong> {{ message.created_at|date:"M d, Y H:i" }}</p>
+    <div class="message-body">
+        {{ message.body|linebreaks }}
+    </div>
+    <a href="{% url 'compose-message' %}?receiver={{ message.sender.id }}&ad={{ message.ad.id|default:'' }}" class="btn btn-primary">Reply</a>
+    <a href="{% url 'inbox' %}" class="btn btn-secondary">Back to Inbox</a>
+</div>
+{% endblock %}

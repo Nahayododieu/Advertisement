@@ -1,0 +1,430 @@
+{% extends 'myapp/base.html' %}
+{% block title %}User Management - Admin Panel{% endblock %}
+
+{% block content %}
+<style>
+    .admin-users {
+        margin-top: 2rem;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .page-header h1 {
+        margin: 0;
+        font-size: 2.5rem;
+        font-weight: 700;
+    }
+
+    .page-header p {
+        margin: 0.5rem 0 0 0;
+        opacity: 0.9;
+        font-size: 1.1rem;
+    }
+
+    .filters-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+
+    .filters-form {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        align-items: end;
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .filter-group label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+
+    .filter-group input,
+    .filter-group select {
+        padding: 0.75rem;
+        border: 2px solid #e9ecef;
+        border-radius: 6px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+    }
+
+    .filter-group input:focus,
+    .filter-group select:focus {
+        outline: none;
+        border-color: #3498db;
+    }
+
+    .filter-btn {
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .filter-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+    }
+
+    .stats-overview {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-box {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #3498db;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .users-table {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    .table-header {
+        background: #f8f9fa;
+        padding: 1rem 1.5rem;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .table-header h3 {
+        margin: 0;
+        color: #2c3e50;
+        font-size: 1.2rem;
+    }
+
+    .user-row {
+        display: grid;
+        grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr;
+        gap: 1rem;
+        padding: 1.5rem;
+        border-bottom: 1px solid #e9ecef;
+        align-items: center;
+        transition: background-color 0.3s;
+    }
+
+    .user-row:hover {
+        background: #f8f9fa;
+    }
+
+    .user-row:last-child {
+        border-bottom: none;
+    }
+
+    .user-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .user-name {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.25rem;
+    }
+
+    .user-email {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .user-stats {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .stat-item {
+        font-size: 0.85rem;
+        color: #666;
+    }
+
+    .user-status {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .status-active {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-inactive {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .status-staff {
+        background: #cce5ff;
+        color: #004085;
+    }
+
+    .user-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .action-btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s;
+    }
+
+    .btn-activate {
+        background: #28a745;
+        color: white;
+    }
+
+    .btn-activate:hover {
+        background: #218838;
+        transform: translateY(-1px);
+    }
+
+    .btn-deactivate {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn-deactivate:hover {
+        background: #c82333;
+        transform: translateY(-1px);
+    }
+
+    .btn-view {
+        background: #17a2b8;
+        color: white;
+    }
+
+    .btn-view:hover {
+        background: #138496;
+        transform: translateY(-1px);
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 2rem;
+    }
+
+    .page-link {
+        padding: 0.5rem 1rem;
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 4px;
+        text-decoration: none;
+        color: #3498db;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .page-link:hover,
+    .page-link.active {
+        background: #3498db;
+        color: white;
+        border-color: #3498db;
+    }
+
+    @media (max-width: 768px) {
+        .filters-form {
+            grid-template-columns: 1fr;
+        }
+
+        .user-row {
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+
+        .user-actions {
+            justify-content: center;
+        }
+    }
+</style>
+
+<div class="admin-users">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>👥 User Management</h1>
+        <p>Manage user accounts and permissions</p>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="stats-overview">
+        <div class="stat-box">
+            <div class="stat-number">{{ total_users }}</div>
+            <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-number">{{ active_users }}</div>
+            <div class="stat-label">Active Users</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-number">{{ staff_users }}</div>
+            <div class="stat-label">Staff Members</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-number">{{ total_users|add:active_users|add:staff_users|mul:-1 }}</div>
+            <div class="stat-label">Inactive Users</div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-section">
+        <form method="get" class="filters-form">
+            <div class="filter-group">
+                <label for="search">Search Users</label>
+                <input type="text" id="search" name="search" value="{{ request.GET.search }}"
+                       placeholder="Username, email, or name...">
+            </div>
+            <div class="filter-group">
+                <label for="status">Account Status</label>
+                <select id="status" name="status">
+                    <option value="">All Status</option>
+                    <option value="active" {% if request.GET.status == 'active' %}selected{% endif %}>Active</option>
+                    <option value="inactive" {% if request.GET.status == 'inactive' %}selected{% endif %}>Inactive</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="is_staff">User Type</label>
+                <select id="is_staff" name="is_staff">
+                    <option value="">All Types</option>
+                    <option value="staff" {% if request.GET.is_staff == 'staff' %}selected{% endif %}>Staff</option>
+                    <option value="user" {% if request.GET.is_staff == 'user' %}selected{% endif %}>Regular User</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <button type="submit" class="filter-btn">🔍 Search & Filter</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Users Table -->
+    <div class="users-table">
+        <div class="table-header">
+            <h3>Users ({{ users|length }} results)</h3>
+        </div>
+
+        {% for user in users %}
+            <div class="user-row">
+                <div class="user-info">
+                    <div class="user-name">{{ user.username }}</div>
+                    <div class="user-email">{{ user.email|default:"No email" }}</div>
+                </div>
+
+                <div class="user-info">
+                    <div class="user-name">{{ user.get_full_name|default:"No name" }}</div>
+                    <div class="user-email">Joined {{ user.date_joined|date:"M d, Y" }}</div>
+                </div>
+
+                <div class="user-stats">
+                    <div class="stat-item">{{ user.ads.count }} ads</div>
+                    <div class="stat-item">{{ user.reports_made.count }} reports</div>
+                </div>
+
+                <div class="user-stats">
+                    <div class="stat-item">{{ user.sent_messages.count }} sent</div>
+                    <div class="stat-item">{{ user.received_messages.count }} received</div>
+                </div>
+
+                <div>
+                    {% if user.is_staff %}
+                        <span class="user-status status-staff">Staff</span>
+                    {% endif %}
+                    {% if user.is_active %}
+                        <span class="user-status status-active">Active</span>
+                    {% else %}
+                        <span class="user-status status-inactive">Inactive</span>
+                    {% endif %}
+                </div>
+
+                <div class="user-actions">
+                    {% if user.is_active %}
+                        <form method="post" action="{% url 'admin-toggle-user-status' user.pk %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="action-btn btn-deactivate"
+                                    onclick="return confirm('Are you sure you want to deactivate this user?')">
+                                Deactivate
+                            </button>
+                        </form>
+                    {% else %}
+                        <form method="post" action="{% url 'admin-toggle-user-status' user.pk %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="action-btn btn-activate">
+                                Activate
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <div style="padding: 3rem; text-align: center; color: #666;">
+                <i style="font-size: 3rem; margin-bottom: 1rem; display: block;">👥</i>
+                <p>No users found matching your criteria.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-link">« Previous</a>
+            {% endif %}
+
+            <span class="page-link active">Page {{ page_obj.number }} of {{ paginator.num_pages }}</span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-link">Next »</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

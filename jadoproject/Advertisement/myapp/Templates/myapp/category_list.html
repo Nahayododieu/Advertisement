@@ -1,0 +1,152 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}Categories - Advertisement Platform{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --surface: #ffffff;
+        --surface-muted: #f7f9fc;
+        --text: #1f2937;
+        --muted: #64748b;
+        --primary: #5e72eb;
+        --primary-soft: rgba(94, 114, 235, 0.14);
+    }
+
+    .categories-container {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 1.5rem 0;
+    }
+
+    .categories-container h1 {
+        font-size: 1.9rem;
+        margin-bottom: 1rem;
+        color: var(--text);
+        font-weight: 700;
+    }
+
+    .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .category-card {
+        background: white;
+        border-radius: 4px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: transform 0.2s;
+        text-align: center;
+        padding: 30px 20px;
+    }
+    
+    .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .category-card h3 {
+        color: #2c3e50;
+        margin: 0 0 10px 0;
+        font-size: 20px;
+    }
+    
+    .category-count {
+        font-size: 32px;
+        color: #3498db;
+        font-weight: bold;
+        margin: 15px 0;
+    }
+    
+    .category-description {
+        color: #7f8c8d;
+        font-size: 14px;
+        margin-bottom: 15px;
+        min-height: 40px;
+    }
+    
+    .category-card .btn {
+        width: 100%;
+    }
+    
+    .stats {
+        text-align: center;
+        background: white;
+        padding: 30px;
+        border-radius: 4px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .stats h2 {
+        color: #2c3e50;
+        margin-top: 0;
+    }
+    
+    .stat-item {
+        display: flex;
+        justify-content: space-around;
+        margin: 20px 0;
+    }
+    
+    .stat-box {
+        padding: 20px;
+    }
+    
+    .stat-number {
+        font-size: 32px;
+        color: #27ae60;
+        font-weight: bold;
+    }
+    
+    .stat-label {
+        color: #7f8c8d;
+        font-size: 14px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="categories-container">
+    <h1>Browse by Category</h1>
+    
+    {% if categories %}
+        <div class="stats">
+            <h2>📊 Platform Overview</h2>
+            <div class="stat-item">
+                <div class="stat-box">
+                    <div class="stat-number">{{ categories|length }}</div>
+                    <div class="stat-label">Categories</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">{{ total_ads|default:"0" }}</div>
+                    <div class="stat-label">Total Advertisements</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="category-grid">
+            {% for category in categories %}
+                <div class="category-card">
+                    <h3>{{ category.name }}</h3>
+                    
+                    <div class="category-count">{{ category.ad_count }}</div>
+                    <p class="category-description">{{ category.description|default:"" }}</p>
+                    
+                    <a href="{% url 'advertisement-list' %}?category={{ category.id }}" class="btn">
+                        View Ads ({{ category.ad_count }})
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 40px; background: white; border-radius: 4px;">
+            <h2>No categories yet</h2>
+            <p>Check back soon for new categories.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

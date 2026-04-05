@@ -1,0 +1,510 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}Admin Dashboard - Advertisement Platform{% endblock %}
+
+{% block content %}
+<style>
+    .admin-dashboard {
+        margin-top: 2rem;
+    }
+
+    .dashboard-header {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .dashboard-header h1 {
+        margin: 0;
+        font-size: 2.5rem;
+        font-weight: 700;
+    }
+
+    .dashboard-header p {
+        margin: 0.5rem 0 0 0;
+        opacity: 0.9;
+        font-size: 1.1rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #3498db, #2980b9);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .stat-card.alert::before {
+        background: linear-gradient(90deg, #e74c3c, #c0392b);
+    }
+
+    .stat-card.success::before {
+        background: linear-gradient(90deg, #27ae60, #229954);
+    }
+
+    .stat-card.warning::before {
+        background: linear-gradient(90deg, #f39c12, #e67e22);
+    }
+
+    .stat-number {
+        font-size: 3rem;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .stat-label {
+        color: #666;
+        font-size: 1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .dashboard-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .dashboard-section h3 {
+        color: #2c3e50;
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+        border-bottom: 3px solid #3498db;
+        padding-bottom: 0.5rem;
+    }
+
+    .activity-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .activity-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 6px;
+        border-left: 4px solid #3498db;
+    }
+
+    .activity-content {
+        flex: 1;
+    }
+
+    .activity-title {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.25rem;
+    }
+
+    .activity-meta {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .activity-time {
+        color: #999;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .top-performers {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .performer-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem;
+        background: #f8f9fa;
+        border-radius: 6px;
+    }
+
+    .performer-info {
+        flex: 1;
+    }
+
+    .performer-name {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .performer-meta {
+        color: #666;
+        font-size: 0.85rem;
+    }
+
+    .performer-stat {
+        font-weight: bold;
+        color: #3498db;
+    }
+
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .action-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        text-align: center;
+        text-decoration: none;
+        color: #2c3e50;
+        transition: all 0.3s;
+    }
+
+    .action-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        color: #2c3e50;
+    }
+
+    .action-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .action-title {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .action-desc {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .charts-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .chart-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .chart-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    .chart-data {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .chart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem;
+        background: #f8f9fa;
+        border-radius: 4px;
+    }
+
+    .chart-label {
+        font-weight: 500;
+        color: #2c3e50;
+    }
+
+    .chart-value {
+        font-weight: bold;
+        color: #3498db;
+        background: rgba(52, 152, 219, 0.1);
+        padding: 0.25rem 0.5rem;
+        border-radius: 20px;
+    }
+
+    .view-all-btn {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: 600;
+        margin-top: 1rem;
+        transition: all 0.3s;
+    }
+
+    .view-all-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .charts-section {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="admin-dashboard">
+    <!-- Header -->
+    <div class="dashboard-header">
+        <h1>👑 Admin Dashboard</h1>
+        <p>Comprehensive platform management and analytics</p>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-number">{{ total_ads }}</span>
+            <span class="stat-label">Total Ads</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">{{ active_ads }}</span>
+            <span class="stat-label">Active Ads</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">{{ pending_ads }}</span>
+            <span class="stat-label">Pending Ads</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">{{ sold_ads }}</span>
+            <span class="stat-label">Sold Ads</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">{{ total_users }}</span>
+            <span class="stat-label">Total Users</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">{{ staff_users }}</span>
+            <span class="stat-label">Staff Users</span>
+        </div>
+        <div class="stat-card alert">
+            <span class="stat-number">{{ pending_reports }}</span>
+            <span class="stat-label">Pending Reports</span>
+        </div>
+        <div class="stat-card success">
+            <span class="stat-number">{{ resolved_reports }}</span>
+            <span class="stat-label">Resolved Reports</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">{{ total_comments }}</span>
+            <span class="stat-label">Total Comments</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">{{ total_likes }}</span>
+            <span class="stat-label">Total Likes</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">{{ total_shares }}</span>
+            <span class="stat-label">Total Shares</span>
+        </div>
+        <div class="stat-card warning">
+            <span class="stat-number">{{ unique_sharers }}</span>
+            <span class="stat-label">Unique Sharers</span>
+        </div>
+    </div>
+
+    <!-- Main Dashboard Grid -->
+    <div class="dashboard-grid">
+        <!-- Recent Activity -->
+        <div class="dashboard-section">
+            <h3>📈 Recent Activity</h3>
+            <div class="activity-list">
+                {% for report in recent_reports %}
+                    <div class="activity-item">
+                        <div class="activity-content">
+                            <div class="activity-title">
+                                🚨 {{ report.reporter.username }} reported "{{ report.advertisement.title }}"
+                            </div>
+                            <div class="activity-meta">
+                                Type: {{ report.get_report_type_display }} • Status: {{ report.get_status_display }}
+                            </div>
+                        </div>
+                        <div class="activity-time">{{ report.created_at|date:"M d, H:i" }}</div>
+                    </div>
+                {% empty %}
+                    <p style="color: #666; text-align: center; padding: 2rem;">No recent reports</p>
+                {% endfor %}
+
+                {% for ad in recent_ads %}
+                    <div class="activity-item">
+                        <div class="activity-content">
+                            <div class="activity-title">
+                                📝 New ad: "{{ ad.title }}"
+                            </div>
+                            <div class="activity-meta">
+                                By {{ ad.user.username }} • ${{ ad.price }} • {{ ad.get_status_display }}
+                            </div>
+                        </div>
+                        <div class="activity-time">{{ ad.created_at|date:"M d, H:i" }}</div>
+                    </div>
+                {% empty %}
+                    <p style="color: #666; text-align: center; padding: 2rem;">No recent ads</p>
+                {% endfor %}
+            </div>
+            <a href="{% url 'admin-reports' %}" class="view-all-btn">View All Reports</a>
+        </div>
+
+        <!-- Top Performers & Quick Actions -->
+        <div>
+            <!-- Top Performers -->
+            <div class="dashboard-section">
+                <h3>🏆 Top Performers</h3>
+                <div class="top-performers">
+                    <h4>Most Viewed Ads</h4>
+                    {% for ad in most_viewed_ads %}
+                        <div class="performer-item">
+                            <div class="performer-info">
+                                <div class="performer-name">{{ ad.title|truncatechars:30 }}</div>
+                                <div class="performer-meta">by {{ ad.user.username }}</div>
+                            </div>
+                            <div class="performer-stat">{{ ad.views }} views</div>
+                        </div>
+                    {% endfor %}
+
+                    <h4 style="margin-top: 1rem;">Most Active Users</h4>
+                    {% for user in most_active_users %}
+                        <div class="performer-item">
+                            <div class="performer-info">
+                                <div class="performer-name">{{ user.username }}</div>
+                                <div class="performer-meta">{{ user.ad_count }} ads created</div>
+                            </div>
+                            <div class="performer-stat">#{{ forloop.counter }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="dashboard-section">
+                <h3>⚡ Quick Actions</h3>
+                <div class="quick-actions">
+                    <a href="{% url 'admin-users' %}" class="action-card">
+                        <span class="action-icon">👥</span>
+                        <div class="action-title">Manage Users</div>
+                        <div class="action-desc">User accounts and permissions</div>
+                    </a>
+                    <a href="{% url 'admin-ads' %}" class="action-card">
+                        <span class="action-icon">📋</span>
+                        <div class="action-title">Manage Ads</div>
+                        <div class="action-desc">Review and moderate advertisements</div>
+                    </a>
+                    <a href="{% url 'share-analytics' %}" class="action-card">
+                        <span class="action-icon">📊</span>
+                        <div class="action-title">Share Analytics</div>
+                        <div class="action-desc">View sharing statistics</div>
+                    </a>
+                    <a href="{% url 'advertisement-list' %}" class="action-card">
+                        <span class="action-icon">📋</span>
+                        <div class="action-title">All Ads</div>
+                        <div class="action-desc">Browse all advertisements</div>
+                    </a>
+                    <a href="{% url 'category-list' %}" class="action-card">
+                        <span class="action-icon">📂</span>
+                        <div class="action-title">Categories</div>
+                        <div class="action-desc">Manage ad categories</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-section">
+        <div class="chart-card">
+            <div class="chart-title">📊 Ads by Status</div>
+            <div class="chart-data">
+                {% for item in ads_by_status %}
+                    <div class="chart-item">
+                        <span class="chart-label">{{ item.status|title }}</span>
+                        <span class="chart-value">{{ item.count }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-title">🚨 Reports by Type</div>
+            <div class="chart-data">
+                {% for item in reports_by_type %}
+                    <div class="chart-item">
+                        <span class="chart-label">{{ item.report_type|title }}</span>
+                        <span class="chart-value">{{ item.count }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-title">📤 Shares by Method</div>
+            <div class="chart-data">
+                {% for item in shares_by_method %}
+                    <div class="chart-item">
+                        <span class="chart-label">{{ item.share_method|title }}</span>
+                        <span class="chart-value">{{ item.count }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

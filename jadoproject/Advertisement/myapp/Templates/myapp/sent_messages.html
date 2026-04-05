@@ -1,0 +1,36 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}Sent Messages{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Sent Messages</h2>
+    <a href="{% url 'compose-message' %}" class="btn btn-primary">Compose New Message</a>
+    <a href="{% url 'inbox' %}" class="btn btn-secondary">Inbox</a>
+    
+    {% if messages %}
+        <div class="messages-list">
+            {% for message in messages %}
+                <div class="message-item">
+                    <h3><a href="{% url 'message-detail' message.pk %}">{{ message.subject }}</a></h3>
+                    <p>To: {{ message.receiver.username }}</p>
+                    <p>{{ message.created_at|date:"M d, Y H:i" }}</p>
+                </div>
+            {% endfor %}
+        </div>
+        {% if is_paginated %}
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                {% endif %}
+                Page {{ page_obj.number }} of {{ paginator.num_pages }}
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        <p>You haven't sent any messages.</p>
+    {% endif %}
+</div>
+{% endblock %}

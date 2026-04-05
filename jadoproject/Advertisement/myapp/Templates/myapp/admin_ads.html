@@ -1,0 +1,447 @@
+{% extends 'myapp/base.html' %}
+{% block title %}Advertisement Management - Admin Panel{% endblock %}
+
+{% block content %}
+<style>
+    .admin-ads {
+        margin-top: 2rem;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .page-header h1 {
+        margin: 0;
+        font-size: 2.5rem;
+        font-weight: 700;
+    }
+
+    .page-header p {
+        margin: 0.5rem 0 0 0;
+        opacity: 0.9;
+        font-size: 1.1rem;
+    }
+
+    .filters-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+
+    .filters-form {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        align-items: end;
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .filter-group label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+
+    .filter-group input,
+    .filter-group select {
+        padding: 0.75rem;
+        border: 2px solid #e9ecef;
+        border-radius: 6px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+    }
+
+    .filter-group input:focus,
+    .filter-group select:focus {
+        outline: none;
+        border-color: #3498db;
+    }
+
+    .filter-btn {
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .filter-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+    }
+
+    .ads-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .ad-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        overflow: hidden;
+        transition: all 0.3s;
+    }
+
+    .ad-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .ad-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        background: #f8f9fa;
+    }
+
+    .ad-content {
+        padding: 1.5rem;
+    }
+
+    .ad-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        display: block;
+        text-decoration: none;
+    }
+
+    .ad-title:hover {
+        color: #3498db;
+    }
+
+    .ad-meta {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        line-height: 1.4;
+    }
+
+    .ad-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #3498db;
+        display: block;
+    }
+
+    .stat-label {
+        color: #666;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    .ad-status {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+    }
+
+    .status-active {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .status-sold {
+        background: #d1ecf1;
+        color: #0c5460;
+    }
+
+    .status-expired {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .ad-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .action-btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s;
+    }
+
+    .btn-view {
+        background: #17a2b8;
+        color: white;
+    }
+
+    .btn-view:hover {
+        background: #138496;
+        transform: translateY(-1px);
+    }
+
+    .btn-edit {
+        background: #28a745;
+        color: white;
+    }
+
+    .btn-edit:hover {
+        background: #218838;
+        transform: translateY(-1px);
+    }
+
+    .btn-delete {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn-delete:hover {
+        background: #c82333;
+        transform: translateY(-1px);
+    }
+
+    .status-form {
+        display: inline-block;
+    }
+
+    .status-select {
+        padding: 0.5rem;
+        border: 2px solid #e9ecef;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        background: white;
+        cursor: pointer;
+    }
+
+    .status-select:focus {
+        outline: none;
+        border-color: #3498db;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 2rem;
+    }
+
+    .page-link {
+        padding: 0.5rem 1rem;
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 4px;
+        text-decoration: none;
+        color: #3498db;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .page-link:hover,
+    .page-link.active {
+        background: #3498db;
+        color: white;
+        border-color: #3498db;
+    }
+
+    .empty-state {
+        text-align: center;
+        color: #666;
+        padding: 3rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    @media (max-width: 768px) {
+        .filters-form {
+            grid-template-columns: 1fr;
+        }
+
+        .ads-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .ad-stats {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+</style>
+
+<div class="admin-ads">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>📋 Advertisement Management</h1>
+        <p>Manage and moderate advertisements on the platform</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-section">
+        <form method="get" class="filters-form">
+            <div class="filter-group">
+                <label for="search">Search Ads</label>
+                <input type="text" id="search" name="search" value="{{ request.GET.search }}"
+                       placeholder="Title, description, or seller...">
+            </div>
+            <div class="filter-group">
+                <label for="status">Status</label>
+                <select id="status" name="status">
+                    <option value="">All Status</option>
+                    {% for status_value, status_label in status_choices %}
+                        <option value="{{ status_value }}" {% if request.GET.status == status_value %}selected{% endif %}>
+                            {{ status_label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="category">Category</label>
+                <select id="category" name="category">
+                    <option value="">All Categories</option>
+                    {% for cat in categories %}
+                        <option value="{{ cat.id }}" {% if request.GET.category == cat.id|stringformat:"s" %}selected{% endif %}>
+                            {{ cat.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-group">
+                <button type="submit" class="filter-btn">🔍 Search & Filter</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Ads Grid -->
+    {% if advertisements %}
+        <div class="ads-grid">
+            {% for ad in advertisements %}
+                <div class="ad-card">
+                    {% if ad.image %}
+                        <img src="{{ ad.image.url }}" alt="{{ ad.title }}" class="ad-image">
+                    {% else %}
+                        <div class="ad-image" style="display: flex; align-items: center; justify-content: center; background: #f8f9fa; color: #666;">
+                            📷 No Image
+                        </div>
+                    {% endif %}
+
+                    <div class="ad-content">
+                        <a href="{% url 'advertisement-detail' ad.slug %}" class="ad-title">{{ ad.title }}</a>
+
+                        <div class="ad-meta">
+                            <strong>Seller:</strong> {{ ad.user.username }}<br>
+                            <strong>Price:</strong> ${{ ad.price }}<br>
+                            <strong>Category:</strong> {{ ad.category.name|default:"No category" }}<br>
+                            <strong>Created:</strong> {{ ad.created_at|date:"M d, Y" }}
+                        </div>
+
+                        <div class="ad-stats">
+                            <div class="stat-item">
+                                <span class="stat-number">{{ ad.views }}</span>
+                                <span class="stat-label">Views</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">{{ ad.likes.count }}</span>
+                                <span class="stat-label">Likes</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">{{ ad.shares_count }}</span>
+                                <span class="stat-label">Shares</span>
+                            </div>
+                        </div>
+
+                        <div class="ad-status status-{{ ad.status }}">
+                            {{ ad.get_status_display }}
+                        </div>
+
+                        <div class="ad-actions">
+                            <a href="{% url 'advertisement-detail' ad.slug %}" class="action-btn btn-view">View</a>
+
+                            {% if ad.user == user or user.is_staff %}
+                                <a href="{% url 'advertisement-update' ad.slug %}" class="action-btn btn-edit">Edit</a>
+                                <a href="{% url 'advertisement-delete' ad.slug %}" class="action-btn btn-delete"
+                                   onclick="return confirm('Are you sure you want to delete this advertisement?')">Delete</a>
+                            {% endif %}
+
+                            {% if user.is_staff %}
+                                <form method="post" action="{% url 'admin-update-ad-status' ad.pk %}" class="status-form">
+                                    {% csrf_token %}
+                                    <select name="status" class="status-select" onchange="this.form.submit()">
+                                        {% for status_value, status_label in status_choices %}
+                                            <option value="{{ status_value }}" {% if ad.status == status_value %}selected{% endif %}>
+                                                Set {{ status_label }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-link">« Previous</a>
+                {% endif %}
+
+                <span class="page-link active">Page {{ page_obj.number }} of {{ paginator.num_pages }}</span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-link">Next »</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="empty-state">
+            <i>📋</i>
+            <p>No advertisements found matching your criteria.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

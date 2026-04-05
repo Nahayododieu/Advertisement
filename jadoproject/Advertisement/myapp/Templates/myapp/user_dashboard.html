@@ -1,0 +1,433 @@
+{% extends 'myapp/base.html' %}
+{% block title %}My Dashboard - Advertisement Platform{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --primary: #38a169;
+        --primary-dark: #22543d;
+        --accent: #9ae6b4;
+        --card: #fffffe;
+        --bg: #e6ffed;
+        --muted: #2f6f43;
+        --surface: rgba(255,255,255,0.95);
+    }
+
+    body {
+        background: var(--bg);
+    }
+
+    .dashboard-page {
+        margin-top: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .dashboard-hero {
+        background: linear-gradient(135deg, #68d391 0%, #2f855a 100%);
+        border-radius: 20px;
+        padding: 1.5rem;
+        color: #fff;
+        box-shadow: 0 10px 30px rgba(46, 125, 50, 0.25);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .hero-content h2 {
+        font-size: 1.85rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        letter-spacing: 0.2px;
+    }
+
+    .hero-content p {
+        color: rgba(255,255,255,0.9);
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .hero-actions {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .hero-actions a {
+        background: rgba(255,255,255,0.18);
+        border: 1px solid rgba(255,255,255,0.35);
+        color: white;
+        padding: 0.65rem 1rem;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 600;
+        backdrop-filter: blur(4px);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .hero-actions a:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.18);
+    }
+
+    .dashboard-container {
+        display: grid;
+        grid-template-columns: 1fr 2.2fr;
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .dashboard-sidebar,
+    .dashboard-main,
+    .ads-list,
+    .activity-section,
+    .quick-actions,
+    .stats-grid,
+    .stat-card {
+        background: var(--card);
+        border-radius: 16px;
+        box-shadow: 0 10px 24px rgba(30, 66, 130, 0.08);
+    }
+
+    .dashboard-sidebar,
+    .dashboard-main {
+        padding: 1rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.8rem;
+    }
+
+    .stat-card {
+        padding: 1rem;
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-dark);
+        margin-bottom: 0.3rem;
+    }
+
+    .stat-label {
+        color: var(--muted);
+        text-transform: uppercase;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        font-size: 0.75rem;
+    }
+
+    .activity-section,
+    .ads-list,
+    .quick-actions {
+        padding: 1rem;
+    }
+
+    .activity-section h3,
+    .ads-list h3,
+    .quick-actions h3 {
+        margin-bottom: 1rem;
+        font-size: 1.05rem;
+        color: #1f2937;
+        border-bottom: 2px solid transparent;
+        padding-bottom: 0.5rem;
+    }
+
+    .quick-actions {
+        display: grid;
+        gap: 0.7rem;
+    }
+
+    .quick-actions button,
+    .action-btn,
+    .ad-actions a,
+    .empty-state a {
+        border: none;
+        cursor: pointer;
+    }
+
+    .action-buttons {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.6rem;
+    }
+
+    .action-btn {
+        background: linear-gradient(135deg, #5a67d8, #4299e1);
+        color: white;
+        border-radius: 12px;
+        font-weight: 600;
+        text-align: center;
+        padding: 0.7rem;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(74, 93, 255, 0.25);
+    }
+
+    .ad-item,
+    .activity-item {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        gap: 0.85rem;
+        align-items: center;
+        padding: 0.85rem;
+        border-bottom: 1px solid #edf2f7;
+    }
+
+    .ad-item:last-child,
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    .ad-info,
+    .activity-content {
+        min-width: 0;
+    }
+
+    .ad-title,
+    .activity-title {
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 0.15rem;
+    }
+
+    .ad-title a {
+        color: #1f2937;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .ad-title a:hover {
+        color: #4c51bf;
+    }
+
+    .ad-meta,
+    .activity-meta,
+    .activity-time {
+        color: var(--muted);
+        font-size: 0.82rem;
+    }
+
+    .ad-status {
+        padding: 0.32rem 0.65rem;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        min-width: 85px;
+        text-align: center;
+    }
+
+    .status-active { background: #ecfdf5; color: #047857; }
+    .status-pending { background: #fffbeb; color: #854d0e; }
+    .status-sold { background: #eff6ff; color: #1d4ed8; }
+    .status-expired { background: #fef2f2; color: #991b1b; }
+
+    .ad-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+    }
+
+    .ad-actions a {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.72rem;
+        border-radius: 8px;
+        text-decoration: none;
+        color: white;
+    }
+
+    .btn-edit { background: #2f855a; }
+    .btn-delete { background: #c53030; }
+
+    .empty-state {
+        text-align: center;
+        padding: 1.8rem;
+        color: var(--muted);
+    }
+
+    .empty-state a {
+        display: inline-block;
+        background: linear-gradient(135deg, #5a67d8, #4299e1);
+        color: white;
+        border-radius: 10px;
+        padding: 0.55rem 1rem;
+        margin-top: 0.8rem;
+        text-decoration: none;
+        font-weight: 600;
+        transition: transform 0.2s ease;
+    }
+
+    .empty-state a:hover {
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 991px) {
+        .dashboard-container { grid-template-columns: 1fr; }
+        .activity-item, .ad-item { grid-template-columns: 1fr; }
+        .ad-status { justify-self: start; margin-top: 0.35rem; }
+        .ad-actions { justify-self: start; }
+        .dashboard-hero { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (max-width: 640px) {
+        .dashboard-hero { padding: 1rem; }
+        .stats-grid { grid-template-columns: 1fr 1fr; }
+        .action-buttons { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div class="dashboard-page">
+    <div class="dashboard-hero">
+        <div class="hero-content">
+            <h2>Welcome back, {{ user.first_name|default:user.username }}!</h2>
+            <p>Check your performance metrics, manage your ads, and connect with buyers—all from one clean control panel.</p>
+            <div class="hero-actions">
+                {% if user.is_staff %}<a href="{% url 'advertisement-create' %}">+ New Ad</a>{% endif %}
+                <a href="{% url 'compose-message' %}">✉️ Send Message</a>
+                <a href="{% url 'inbox' %}">📥 Open Inbox</a>
+            </div>
+        </div>
+        <img src="data:image/svg+xml,%3Csvg width='96' height='96' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0'%20y1='0'%20x2='1'%20y2='1'%3E%3Cstop offset='0'%20stop-color='%23ffffff'%20stop-opacity='0.7'/%3E%3Cstop offset='1'%20stop-color='%23ffffff'%20stop-opacity='0.4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='24' height='24' rx='4' fill='none'/%3E%3Cpath d='M3 13h4V21H3zM8 8h4V21H8zM13 2h4V21h-4zM18 11h3v10h-3z' fill='url(%23g)'/%3E%3Cpath d='M3 13h4V21H3zM8 8h4V21H8zM13 2h4V21h-4zM18 11h3v10h-3z' fill='white' fill-opacity='0.9'/%3E%3C/svg%3E" alt="Dashboard illustration" style="width: 92px; height: 92px;" />
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="dashboard-sidebar">
+        <div class="quick-actions">
+            <h3> Quick Actions</h3>
+            <div class="action-buttons">
+                {% if user.is_staff %}
+                <a href="{% url 'advertisement-create' %}" class="action-btn">
+                    Create Ad
+                </a>
+                {% endif %}
+                <a href="{% url 'compose-message' %}" class="action-btn">
+                    Send Message
+                </a>
+                <a href="{% url 'user-share-history' %}" class="action-btn">
+                     My Shares
+                </a>
+                <a href="{% url 'inbox' %}" class="action-btn">
+                     Inbox
+                </a>
+            </div>
+        </div>
+
+        <!-- User Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">{{ active_ads_count }}</div>
+                <div class="stat-label">Active Ads</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ sold_ads_count }}</div>
+                <div class="stat-label">Sold Ads</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ total_views }}</div>
+                <div class="stat-label">Total Views</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ total_likes }}</div>
+                <div class="stat-label">Total Likes</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="dashboard-main">
+        <!-- My Advertisements -->
+        <div class="ads-list">
+            <h3>  My Advertisements</h3>
+            {% if user_ads %}
+                {% for ad in user_ads %}
+                    <div class="ad-item">
+                        <div class="ad-info">
+                            <div class="ad-title">
+                                <a href="{% url 'advertisement-detail' ad.slug %}">{{ ad.title }}</a>
+                            </div>
+                            <div class="ad-meta">
+                                ${{ ad.price }} • {{ ad.views }} views • {{ ad.likes.count }} likes • {{ ad.shares_count }} shares
+                            </div>
+                        </div>
+                        <div class="ad-status status-{{ ad.status }}">
+                            {{ ad.get_status_display }}
+                        </div>
+                        <div class="ad-actions">
+                            <a href="{% url 'advertisement-update' ad.slug %}" class="btn-edit">Edit</a>
+                            <a href="{% url 'advertisement-delete' ad.slug %}" class="btn-delete"
+                               onclick="return confirm('Are you sure you want to delete this advertisement?')">Delete</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <i> </i>
+                    <p>You haven't created any advertisements yet.</p>
+                    {% if user.is_staff %}<a href="{% url 'advertisement-create' %}" class="btn">Create Your First Ad</a>{% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="activity-section">
+            <h3> Recent Activity</h3>
+            {% if recent_comments %}
+                {% for comment in recent_comments %}
+                    <div class="activity-item">
+                        <div class="activity-content">
+                            <div class="activity-title">
+                                 New comment on "{{ comment.ad.title }}"
+                            </div>
+                            <div class="activity-meta">
+                                By {{ comment.user.username }}: "{{ comment.text|truncatechars:50 }}"
+                            </div>
+                        </div>
+                        <div class="activity-time">{{ comment.created_at|date:"M d, H:i" }}</div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <p>No recent activity on your advertisements.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Recent Messages -->
+        {% if user_messages %}
+        <div class="activity-section">
+            <h3> Recent Messages</h3>
+            {% for message in user_messages %}
+                <div class="activity-item">
+                    <div class="activity-content">
+                        <div class="activity-title">
+                            {% if message.sender == user %}
+                                 To {{ message.receiver.username }}
+                            {% else %}
+                                 From {{ message.sender.username }}
+                            {% endif %}
+                        </div>
+                        <div class="activity-meta">
+                            {{ message.subject }}
+                        </div>
+                    </div>
+                    <div class="activity-time">{{ message.created_at|date:"M d, H:i" }}</div>
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

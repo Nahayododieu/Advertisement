@@ -1,0 +1,137 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}Sign Up - Advertisement Platform{% endblock %}
+
+{% block extra_css %}
+<style>
+    body { background: #f6efe8; }
+    .signup-container { max-width: 560px; margin: 40px auto; background: #fff; padding: 34px; border-radius: 24px; box-shadow: 0 20px 34px rgba(93,70,84,0.14); border: 1px solid #f2d8d3; }
+    .signup-container h2 { text-align: center; color: #3a2e30; margin-bottom: 8px; font-size: 2rem; }
+    .signup-subtitle { text-align: center; color: #7a5f64; font-size: 0.95rem; margin-bottom: 22px; }
+
+    .form-group label { color: #5f4f54; font-weight: 700; font-size: 14px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 14px; border: 1px solid #e7d2ce; border-radius: 12px; background: #fff; font-size: 15px; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #e38f6f; box-shadow: 0 0 0 4px rgba(227,143,111,0.15); outline: none; }
+
+    .help-text { background: #fff0f2; border: 1px solid #f0d8d5; color: #7a5f64; border-radius: 10px; padding: 8px 10px; margin-top: 8px; }
+    .error-list { background: #fde8e8; border: 1px solid #f7c3c3; border-radius: 10px; color: #b84b4b; padding: 12px; margin-top: 8px; }
+
+    .signup-btn { width: 100%; background: linear-gradient(138deg, #f7a58f 0%, #ebb1b1 100%); border-radius: 999px; color: #3f2f31; border: none; font-weight: 700; padding: 12px; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .signup-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(168,93,99,0.2); }
+
+    .login-link { text-align: center; margin-top: 18px; color: #7a5f64; }
+    .login-link a { color: #cb6f7a; font-weight: 700; }
+    .login-link a:hover { text-decoration: underline; }
+
+    .user-role-info { background: #f8f9fa; border: 1px solid #dee2e6; padding: 20px; border-radius: 10px; margin-bottom: 24px; }
+    .permissions-box { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+
+    .permissions-box ul { list-style: none; padding: 0; margin: 0; }
+    .permissions-box li { margin: 6px 0; color: #555; font-size: 14px; }
+    .can-do li:before { content: '✓ '; color: #27ae60; }
+    .cannot-do li:before { content: '✗ '; color: #e74c3c; }
+
+    @media (max-width: 768px) { .permissions-box { grid-template-columns: 1fr; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="signup-container">
+    <h2>Create Regular User Account</h2>
+    <p class="signup-subtitle">Join our advertisement platform as a regular user</p>
+
+    <div class="user-role-info">
+        <h3 style="color: #2c3e50; margin-bottom: 12px;">📋 Account Type: Regular User</h3>
+        <div class="permissions-box">
+            <div class="can-do">
+                <h4 style="color: #27ae60; margin-bottom: 10px;">✅ What you CAN do:</h4>
+                <ul>
+                    <li>View and browse advertisements</li>
+                    <li>Like and comment on ads</li>
+                    <li>Share advertisements</li>
+                    <li>Send and receive messages</li>
+                    <li>Access your dashboard and share history</li>
+                </ul>
+            </div>
+            <div class="cannot-do">
+                <h4 style="color: #e74c3c; margin: 15px 0 10px;">✗ What you CANNOT do:</h4>
+                <ul>
+                    <li>Access admin panel</li>
+                    <li>View admin reports</li>
+                    <li>Manage other users</li>
+                    <li>Delete other users' ads</li>
+                    <li>View analytics (admin only)</li>
+                    <li>Moderate content</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}">Username</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <ul class="error-list">{% for error in form.username.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+            {% if form.username.help_text %}<p class="help-text">{{ form.username.help_text|safe }}</p>{% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.password1.id_for_label }}">Password</label>
+            {{ form.password1 }}
+            {% if form.password1.errors %}
+                <ul class="error-list">{% for error in form.password1.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+            {% if form.password1.help_text %}<p class="help-text">{{ form.password1.help_text|safe }}</p>{% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+                <ul class="error-list">{% for error in form.password2.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+            {% if form.password2.help_text %}<p class="help-text">{{ form.password2.help_text|safe }}</p>{% endif %}
+        </div>
+
+        <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" name="accept_terms" required style="width: auto;"> I accept the <a href="#terms" style="color: #3498db; text-decoration: underline;">Terms & Conditions</a></label>
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                        <p style="color: #e74c3c; font-size: 12px; margin-top: 5px;">{{ message }}</p>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <button type="submit" class="signup-btn">Create Regular User Account</button>
+    </form>
+
+    <div class="login-link">Already have an account? <a href="{% url 'login' %}">Login here</a></div>
+</div>
+
+<div id="terms-modal" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.68); z-index:1000; padding: 20px;">
+    <div style="background: white; max-width: 620px; margin: 0 auto; border-radius: 8px; max-height: 80vh; overflow-y: auto;">
+        <div style="padding: 20px; border-bottom: 1px solid #ddd;">
+            <h3 style="margin: 0; color: #2c3e50;">Terms & Conditions</h3>
+            <button onclick="closeTerms()" style="float: right; background: none; border: none; font-size: 20px; cursor: pointer;">×</button>
+        </div>
+        <div style="padding: 20px;">
+            <p><strong>Regular Users:</strong> Can create, view, and manage their own advertisements and interact with platform features.</p>
+            <p><strong>Administrators:</strong> Have full control over user moderation, system settings, analytics, and reports. Admin roles are granted by site operators only.</p>
+            <p>The terms include respect for all users, no fraudulent behaviour, and no misuse of personal data.</p>
+            <button onclick="closeTerms()" style="background: #3498db; color:#fff; border:none; padding: 10px 20px; border-radius:4px; cursor:pointer; margin-top: 12px;">I Understand</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function closeTerms(){ document.getElementById('terms-modal').style.display='none'; }
+var link = document.querySelector('a[href="#terms"]');
+if(link){ link.addEventListener('click', function(e){ e.preventDefault(); document.getElementById('terms-modal').style.display='block'; }); }
+</script>
+
+{% endblock %}

@@ -1,0 +1,138 @@
+{% load static %}
+<div class="comment-item" data-comment-id="{{ comment.id }}" style="margin-left: calc({{ depth }} * 20px); {% if depth > 0 %}border-left: 2px solid #e9ecef; padding-left: 15px; margin-top: 10px;{% endif %}">
+    <div class="comment-header">
+        <strong class="comment-author">{{ comment.user.username }}</strong>
+        <small class="comment-date">{{ comment.created_at|date:"M d, Y H:i" }}</small>
+        {% if comment.is_reply %}
+            <span class="reply-indicator">↳ Reply</span>
+        {% endif %}
+    </div>
+
+    <div class="comment-content">
+        {{ comment.text|linebreaksbr }}
+    </div>
+
+    <div class="comment-actions">
+        {% if user.is_authenticated %}
+            <button class="reply-btn btn-link" data-comment-id="{{ comment.id }}">Reply</button>
+        {% endif %}
+        {% if comment.get_replies %}
+            <button class="toggle-replies-btn btn-link" data-comment-id="{{ comment.id }}">
+                {% if comment.get_replies|length == 1 %}
+                    1 reply
+                {% else %}
+                    {{ comment.get_replies|length }} replies
+                {% endif %}
+            </button>
+        {% endif %}
+    </div>
+
+    <!-- Reply form (hidden by default) -->
+    {% if user.is_authenticated %}
+        <div class="reply-form-container" id="reply-form-{{ comment.id }}" style="display: none; margin-top: 10px;">
+            <form class="reply-form" data-parent-id="{{ comment.id }}">
+                {% csrf_token %}
+                <textarea name="text" rows="2" style="width:100%;padding:8px;border-radius:4px;border:1px solid #ddd;resize:vertical;" placeholder="Write a reply..."></textarea>
+                <div style="margin-top:8px;display:flex;gap:8px;">
+                    <button type="submit" class="btn btn-primary btn-sm">Reply</button>
+                    <button type="button" class="btn btn-secondary btn-sm cancel-reply">Cancel</button>
+                </div>
+            </form>
+        </div>
+    {% endif %}
+
+    <!-- Replies container -->
+    <div class="replies-container" id="replies-{{ comment.id }}" style="display: none;">
+        {% for reply in comment.get_replies %}
+            {% include "myapp/comment_item.html" with comment=reply depth=depth|add:1 %}
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.comment-item {
+    margin-bottom: 15px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
+.comment-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.comment-author {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.comment-date {
+    color: #6c757d;
+    font-size: 12px;
+}
+
+.reply-indicator {
+    background: #007bff;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.comment-content {
+    color: #495057;
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.comment-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 13px;
+    padding: 0;
+    text-decoration: underline;
+}
+
+.btn-link:hover {
+    color: #0056b3;
+}
+
+.reply-form-container {
+    background: white;
+    padding: 12px;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+}
+
+.btn-sm {
+    padding: 4px 12px;
+    font-size: 12px;
+}
+
+.replies-container {
+    margin-top: 10px;
+}
+
+/* Nested comment styling */
+.comment-item .comment-item {
+    background: white;
+    border: 1px solid #e9ecef;
+    margin-top: 8px;
+}
+
+.comment-item .comment-item .comment-author {
+    font-weight: 500;
+}
+</style>

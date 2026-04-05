@@ -1,0 +1,65 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}User Roles & Permissions - Advertisement Platform{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 40px auto; padding: 20px;">
+    <h1 style="text-align: center; color: #2c3e50; margin-bottom: 30px;">👥 User Roles & Permissions</h1>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px;">
+        
+        <!-- Regular User Card -->
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
+            <h2 style="margin-top: 0; font-size: 24px;"> Regular User</h2>
+            <p style="opacity: 0.9; margin-bottom: 20px;">Standard user account with basic platform access</p>
+            
+            <h3 style="color: #a8d8ff; margin-bottom: 15px;"> Permissions:</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin-bottom: 8px;">✓ View and browse all advertisements</li>
+                <li style="margin-bottom: 8px;">✓ Create and manage personal ads</li>
+                <li style="margin-bottom: 8px;">✓ Like and comment on ads</li>
+                <li style="margin-bottom: 8px;">✓ Share advertisements</li>
+                <li style="margin-bottom: 8px;">✓ Send/receive private messages</li>
+                <li style="margin-bottom: 8px;">✓ Access personal dashboard</li>
+                <li style="margin-bottom: 8px;">✓ View share history</li>
+            </ul>
+        </div>
+        
+        <!-- Admin User Card -->
+        <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
+            <h2 style="margin-top: 0; font-size: 24px;"> Administrator</h2>
+            <p style="opacity: 0.9; margin-bottom: 20px;">Full system access for platform management</p>
+            
+            <h3 style="color: #ffb3c1; margin-bottom: 15px;"> All Regular User Permissions +</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin-bottom: 8px;">✓ Access admin dashboard</li>
+                <li style="margin-bottom: 8px;">✓ Create and manage advertisements</li>
+                <li style="margin-bottom: 8px;">✓ View and manage all users</li>
+                <li style="margin-bottom: 8px;">✓ Moderate advertisements</li>
+                <li style="margin-bottom: 8px;">✓ Review and handle reports</li>
+                <li style="margin-bottom: 8px;">✓ View analytics and statistics</li>
+                <li style="margin-bottom: 8px;">✓ System administration</li>
+                <li style="margin-bottom: 8px;">✓ Content moderation</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
+        <h3 style="color: #856404; margin-top: 0;"> Security & Access Control</h3>
+        <ul style="color: #856404; margin-bottom: 0;">
+            <li>Regular users cannot access admin functions or sensitive data</li>
+            <li>Admin privileges are granted only to authorized personnel</li>
+            <li>All access attempts are logged for security monitoring</li>
+            <li>Attempting to bypass restrictions may result in account suspension</li>
+        </ul>
+    </div>
+    
+    <div style="background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 8px; padding: 20px;">
+        <h3 style="color: #0c5460; margin-top: 0;"> Need Admin Access?</h3>
+        <p style="color: #0c5460; margin-bottom: 0;">
+            If you require administrator privileges for your role, please contact the platform administrator 
+            or site owner. Admin accounts are not available through regular signup.
+        </p>
+    </div>
+</div>
+{% endblock %}

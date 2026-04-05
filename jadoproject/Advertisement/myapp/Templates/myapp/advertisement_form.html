@@ -1,0 +1,307 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}{% if form.instance.pk %}Edit{% else %}Create{% endif %} Advertisement - Advertisement Platform{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        padding: 30px;
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .form-container h1 {
+        color: #2c3e50;
+        margin-bottom: 30px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #2c3e50;
+        font-weight: bold;
+    }
+    
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+    
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+    }
+    
+    .form-group textarea {
+        resize: vertical;
+        min-height: 150px;
+    }
+    
+    .form-group small {
+        display: block;
+        margin-top: 5px;
+        color: #7f8c8d;
+        font-size: 12px;
+    }
+    
+    .error-list {
+        background-color: #fadbd8;
+        color: #c0392b;
+        padding: 10px;
+        border-radius: 4px;
+        margin-top: 5px;
+        list-style: none;
+    }
+    
+    .error-list li {
+        margin-bottom: 5px;
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 30px;
+    }
+    
+    .form-actions .btn {
+        flex: 1;
+        text-align: center;
+        padding: 12px 20px;
+        font-size: 16px;
+    }
+    
+    .btn-secondary {
+        background-color: #95a5a6;
+    }
+    
+    .btn-secondary:hover {
+        background-color: #7f8c8d;
+    }
+    
+    .help-text {
+        background: #ecf0f1;
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        border-left: 4px solid #3498db;
+    }
+    
+    .form-section {
+        background-color: #34495e;
+        color: white;
+        padding: 12px 15px;
+        margin-top: 25px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 16px;
+    }
+    
+    .form-section:first-of-type {
+        margin-top: 0;
+    }
+    
+    .image-upload-group {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 4px;
+        border: 2px dashed #3498db;
+        margin-bottom: 20px;
+    }
+    
+    .image-upload-group label {
+        color: #2c3e50;
+        font-weight: bold;
+        font-size: 16px;
+    }
+    
+    .image-upload-group input[type="file"] {
+        padding: 10px;
+        border: 1px solid #bdc3c7;
+        background-color: white;
+    }
+    
+    .image-upload-group small {
+        color: #e74c3c;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1>{% if form.instance.pk %}Edit{% else %}Create{% endif %} Advertisement</h1>
+    
+    {% if form.non_field_errors %}
+        <div class="error-list">
+            {% for error in form.non_field_errors %}
+                <div>{{ error }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-section">📸 Basic Information</div>
+        
+        <div class="form-group">
+            <label for="{{ form.title.id_for_label }}">{{ form.title.label }}</label>
+            {{ form.title }}
+            {% if form.title.errors %}
+                <ul class="error-list">
+                    {% for error in form.title.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        
+        <div class="image-upload-group">
+            <label for="{{ form.image.id_for_label }}">📷 Product Image</label>
+            {{ form.image }}
+            <small>⬆️ Click here to upload a clear photo of your product</small>
+            {% if form.image.errors %}
+                <ul class="error-list">
+                    {% for error in form.image.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        
+        <div class="form-section">📝 Additional Details</div>
+        
+        <div class="form-group">
+            <label for="{{ form.slug.id_for_label }}">{{ form.slug.label }}</label>
+            {{ form.slug }}
+            <small>A unique URL-friendly version of the title (auto-generated from title)</small>
+            {% if form.slug.errors %}
+                <ul class="error-list">
+                    {% for error in form.slug.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+            {{ form.description }}
+            <small>Provide a detailed description of your item</small>
+            {% if form.description.errors %}
+                <ul class="error-list">
+                    {% for error in form.description.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        
+        <div class="form-section">💰 Pricing & Category</div>
+        
+        <div class="form-group">
+            <label for="{{ form.price.id_for_label }}">{{ form.price.label }}</label>
+            {{ form.price }}
+            <small>Enter the price in your local currency</small>
+            {% if form.price.errors %}
+                <ul class="error-list">
+                    {% for error in form.price.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.category.id_for_label }}">{{ form.category.label }}</label>
+            {{ form.category }}
+            {% if form.category.errors %}
+                <ul class="error-list">
+                    {% for error in form.category.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.city.id_for_label }}">{{ form.city.label }}</label>
+            {{ form.city }}
+            {% if form.city.errors %}
+                <ul class="error-list">
+                    {% for error in form.city.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+            {{ form.phone }}
+            <small>Provide your contact phone number (will be shown on the listing)</small>
+            {% if form.phone.errors %}
+                <ul class="error-list">
+                    {% for error in form.phone.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        
+        {% if form.status %}
+            <div class="form-group">
+                <label for="{{ form.status.id_for_label }}">{{ form.status.label }}</label>
+                {{ form.status }}
+                {% if form.status.errors %}
+                    <ul class="error-list">
+                        {% for error in form.status.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        {% endif %}
+        
+        {% if form.is_featured %}
+            <div class="form-group">
+                <label style="display: flex; align-items: center; font-weight: normal;">
+                    {{ form.is_featured }} Featured (appears at top of listings)
+                </label>
+                {% if form.is_featured.errors %}
+                    <ul class="error-list">
+                        {% for error in form.is_featured.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        {% endif %}
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-success">
+                {% if form.instance.pk %}Update{% else %}Create{% endif %} Advertisement
+            </button>
+            <a href="{% url 'advertisement-list' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

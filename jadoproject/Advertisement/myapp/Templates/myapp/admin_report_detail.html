@@ -1,0 +1,193 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}Report Details{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Report Details</h2>
+
+    <div class="report-detail">
+        <div class="report-header">
+            <h3>Report on "{{ report.advertisement.title }}"</h3>
+            <span class="status-badge status-{{ report.status }}">{{ report.get_status_display }}</span>
+        </div>
+
+        <div class="report-info">
+            <div class="info-section">
+                <h4>Report Information</h4>
+                <p><strong>Reporter:</strong> {{ report.reporter.username }} ({{ report.reporter.email }})</p>
+                <p><strong>Report Type:</strong> {{ report.get_report_type_display }}</p>
+                <p><strong>Submitted:</strong> {{ report.created_at|date:"M d, Y H:i" }}</p>
+                <p><strong>Last Updated:</strong> {{ report.updated_at|date:"M d, Y H:i" }}</p>
+            </div>
+
+            <div class="info-section">
+                <h4>Advertisement Details</h4>
+                <p><strong>Title:</strong> <a href="{% url 'advertisement-detail' report.advertisement.slug %}" target="_blank">{{ report.advertisement.title }}</a></p>
+                <p><strong>Posted by:</strong> {{ report.advertisement.user.username }}</p>
+                <p><strong>Status:</strong> {{ report.advertisement.get_status_display }}</p>
+                <p><strong>Price:</strong> ${{ report.advertisement.price }}</p>
+                <p><strong>City:</strong> {{ report.advertisement.city }}</p>
+            </div>
+        </div>
+
+        <div class="report-content">
+            <h4>Report Description</h4>
+            <p>{{ report.description }}</p>
+        </div>
+
+        {% if report.admin_notes %}
+            <div class="admin-notes">
+                <h4>Admin Notes</h4>
+                <p>{{ report.admin_notes }}</p>
+            </div>
+        {% endif %}
+
+        <div class="report-actions">
+            <h4>Update Status</h4>
+            <form method="post" action="{% url 'update-report-status' report.pk %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="status">Status:</label>
+                    <select name="status" id="status">
+                        {% for status_value, status_label in report.STATUS_CHOICES %}
+                            <option value="{{ status_value }}" {% if report.status == status_value %}selected{% endif %}>
+                                {{ status_label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="admin_notes">Admin Notes:</label>
+                    <textarea name="admin_notes" id="admin_notes" rows="4" placeholder="Add notes about this report...">{{ report.admin_notes }}</textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Update Report</button>
+            </form>
+        </div>
+
+        <div class="navigation">
+            <a href="{% url 'admin-reports' %}" class="btn btn-secondary">Back to Reports</a>
+            <a href="{% url 'advertisement-detail' report.advertisement.slug %}" class="btn btn-info" target="_blank">View Advertisement</a>
+        </div>
+    </div>
+</div>
+
+<style>
+.report-detail {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.report-header h3 {
+    margin: 0;
+    color: #333;
+}
+
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-pending { background: #fff3cd; color: #856404; }
+.status-investigating { background: #cce5ff; color: #004085; }
+.status-resolved { background: #d4edda; color: #155724; }
+.status-dismissed { background: #f8d7da; color: #721c24; }
+
+.report-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.info-section {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.info-section h4 {
+    margin: 0 0 15px 0;
+    color: #333;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 10px;
+}
+
+.info-section p {
+    margin: 8px 0;
+    color: #555;
+}
+
+.report-content,
+.admin-notes {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    border: 1px solid #e9ecef;
+}
+
+.report-content h4,
+.admin-notes h4 {
+    margin: 0 0 15px 0;
+    color: #333;
+}
+
+.report-actions {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.report-actions h4 {
+    margin: 0 0 15px 0;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.navigation {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .report-info {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
